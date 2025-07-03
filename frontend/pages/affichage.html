@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Répartition Stage</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body class="bg-light">
+    <div class="container mt-5">
+      <h2>Répartition par type de stage</h2>
+      <canvas id="typeStageChart" width="400" height="300"></canvas>
+    </div>
+
+    <script>
+      new Chart(document.getElementById('typeStageChart'), {
+        type: 'bar',
+        data: {
+          labels: ['Court', 'Long', 'Fin d\'études'],
+          datasets: [{
+            label: 'Nombre de stagiaires',
+            data: {{DATA}}, <!-- sera remplacé par du JSON injecté -->
+            backgroundColor: ['#17a2b8', '#ffc107', '#28a745']
+          }]
+        },
+        options: {
+          scales: {
+            y: { beginAtZero: true }
+          }
+        }
+      });
+    </script>
+  </body>
+</html>
