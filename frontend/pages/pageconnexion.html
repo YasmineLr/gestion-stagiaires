@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Connexion</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../styles/pageconnexion.css" />
+  </head>
+
+  <body>
+    <script src="../js/pageconnexion.js"></script>
+
+    <div class="main-content">
+      <div class="login-container">
+        <div class="login-tabs">
+          <a id="first-login-link">PREMIÈRE CONNEXION ?</a>
+          <a href="login.html" class="active">J’AI DÉJÀ UN COMPTE</a>
+        </div>
+
+        <form id="loginForm">
+          <label for="email">Votre email *</label>
+          <input type="email" id="email" placeholder="email@abc.ab" required />
+          <label for="password">Votre mot de passe *</label>
+          <input
+            type="password"
+            id="password"
+            placeholder="********"
+            required
+          />
+          <button type="submit">SE CONNECTER</button>
+          <a class="link" href="#">J’ai oublié mon mot de passe</a>
+        </form>
+        <div id="error" class="error-message"></div>
+      </div>
+    </div>
+
+    <script></script>
+  </body>
+</html>

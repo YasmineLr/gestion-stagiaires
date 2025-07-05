@@ -1,0 +1,78 @@
+body {
+  background-color: white;
+  font-family: "Open Sans", sans-serif;
+
+  padding-top: 150px;
+}
+
+.header-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: white;
+  z-index: 999;
+}
+
+.navbar-custom {
+  background-color: #28a745;
+  border-radius: 30px;
+  margin: 20px 20px 0 20px;
+}
+
+.logo-text {
+  color: #28a745;
+  font-weight: bold;
+  font-size: 24px;
+}
+
+.BUtton {
+  background-color: white;
+  border: 2px solid #28a745;
+  border-radius: 30px;
+  color: #28a745;
+  padding: 10px 20px;
+  margin: 20px 0 -20px 0;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.BUtton:hover {
+  background-color: #28a745;
+  color: white;
+}
+
+.navbar-nav {
+  border-radius: 10px;
+  display: flex;
+  width: 100%;
+}
+
+.nav-item {
+  flex: 1;
+  padding: 0px;
+  margin: 0px;
+  display: flex;
+  justify-content: center;
+  border-radius: 30px;
+  cursor: pointer;
+}
+
+.icon-noir {
+  color: black;
+}
+
+.active {
+  background-color: #41c25f;
+}
+
+.nav-item:hover {
+  background-color: #41c25f;
+}
+
+.social-icons img {
+  width: 50px;
+  margin: -10px;
+  padding: 20px 0px 0px 30px;
+}

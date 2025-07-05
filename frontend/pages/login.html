@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Cabinet Medical Oujda</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../styles/login.css" />
+  </head>
+  <body>
+    <div class="main-content">
+      <div class="choice-wrapper">
+        <div class="choice-box" onclick="selectRole('tuteur')">
+          Je suis tuteur
+        </div>
+        <div class="choice-box" onclick="selectRole('admin')">
+          Je suis admin
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function selectRole(role) {
+        localStorage.setItem("userRole", role);
+        window.location.href = "pageconnexion.html";
+      }
+    </script>
+  </body>
+</html>
