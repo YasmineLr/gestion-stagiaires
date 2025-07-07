@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Vue générale des stagiaires</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <h2>📊 Vue générale des stagiaires</h2>
+
+    <canvas id="typeChart" width="400" height="200"></canvas>
+    <canvas id="sexeChart" width="400" height="200"></canvas>
+    <canvas id="ageChart" width="400" height="200"></canvas>
+
+    <script>
+      fetch("../../backend/general.php")
+        .then((response) => response.json())
+        .then((data) => {
+          // === Type de stage ===
+          const typeLabels = data.type_stage.map((e) => e.type_stage);
+          const typeCounts = data.type_stage.map((e) => e.total);
+          new Chart(document.getElementById("typeChart"), {
+            type: "bar",
+            data: {
+              labels: typeLabels,
+              datasets: [
+                {
+                  label: "Nombre par type de stage",
+                  data: typeCounts,
+                  backgroundColor: ["#3498db", "#2ecc71", "#f39c12"],
+                },
+              ],
+            },
+          });
+
+          // === Sexe ===
+          const sexeLabels = data.sexe.map((e) => e.sexe);
+          const sexeCounts = data.sexe.map((e) => e.total);
+          new Chart(document.getElementById("sexeChart"), {
+            type: "doughnut",
+            data: {
+              labels: sexeLabels,
+              datasets: [
+                {
+                  label: "Répartition par sexe",
+                  data: sexeCounts,
+                  backgroundColor: ["#e74c3c", "#9b59b6"],
+                },
+              ],
+            },
+          });
+
+          // === Âge ===
+          const ageLabels = Object.keys(data.age);
+          const ageCounts = Object.values(data.age);
+          new Chart(document.getElementById("ageChart"), {
+            type: "bar",
+            data: {
+              labels: ageLabels,
+              datasets: [
+                {
+                  label: "Répartition par tranche d'âge",
+                  data: ageCounts,
+                  backgroundColor: ["#1abc9c", "#f1c40f", "#95a5a6"],
+                },
+              ],
+            },
+          });
+        })
+        .catch((error) => {
+          console.error("Erreur lors de la récupération des données :", error);
+        });
+    </script>
+  </body>
+</html>
