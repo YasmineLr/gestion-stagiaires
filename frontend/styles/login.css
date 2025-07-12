@@ -28,7 +28,7 @@
     .choice-box {
       width: 250px;
       height: 150px;
-      background-color: #28a745;
+      background-color: #4889ea;
       color: white;
       font-weight: bold;
       font-size: 18px;
@@ -43,7 +43,7 @@
     }
 
     .choice-box:hover {
-      background-color: #218838;
+      background-color: #4889ea;
       transform: scale(1.03);
     }
 
