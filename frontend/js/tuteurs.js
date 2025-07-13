@@ -41,8 +41,8 @@ function renderTable() {
       <td>${tuteur.role}</td>
       <td>${tuteur.service}</td>
       <td class="actions">
-        <button onclick="openEditForm(${tuteur.id}) ">Modifier</button>
-        <button onclick="deleteTuteur(${tuteur.id})">Supprimer</button>
+        <button class="btn btn-sm btn-warning me-1" onclick="openEditForm(${tuteur.id}) ">Modifier</button>
+        <button class="btn btn-sm btn-danger" onclick="deleteTuteur(${tuteur.id})">Supprimer</button>
       </td>
     `;
     tableBody.appendChild(tr);
