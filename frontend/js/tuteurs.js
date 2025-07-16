@@ -10,6 +10,7 @@ const modalTitle = document.getElementById('modalTitle');
 const tuteurForm = document.getElementById('tuteurForm');
 const formError = document.getElementById('formError');
 const searchInput = document.getElementById('searchInput');
+const serviceSelect = document.getElementById('serviceSelect'); // select
 
 async function loadTuteurs() {
   try {
@@ -38,10 +39,9 @@ function renderTable() {
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td>${tuteur.nom}</td>
-      <td>${tuteur.role}</td>
-      <td>${tuteur.service}</td>
+      <td>${tuteur.service_nom || 'Non défini'}</td>
       <td class="actions">
-        <button class="btn btn-sm btn-warning me-1" onclick="openEditForm(${tuteur.id}) ">Modifier</button>
+        <button class="btn btn-sm btn-warning me-1" onclick="openEditForm(${tuteur.id})">Modifier</button>
         <button class="btn btn-sm btn-danger" onclick="deleteTuteur(${tuteur.id})">Supprimer</button>
       </td>
     `;
@@ -70,6 +70,7 @@ document.getElementById('addBtn').addEventListener('click', () => {
   formError.textContent = '';
   tuteurForm.reset();
   document.getElementById('tuteurId').value = '';
+  serviceSelect.value = '';
   formModal.style.display = 'flex';
 });
 
@@ -81,8 +82,7 @@ function openEditForm(id) {
   formError.textContent = '';
   document.getElementById('tuteurId').value = tuteur.id;
   document.getElementById('nom').value = tuteur.nom;
-  document.getElementById('role').value = tuteur.role;
-  document.getElementById('service').value = tuteur.service;
+  serviceSelect.value = tuteur.service_id || '';
   formModal.style.display = 'flex';
 }
 
@@ -96,16 +96,15 @@ tuteurForm.addEventListener('submit', async e => {
 
   const id = document.getElementById('tuteurId').value;
   const nom = document.getElementById('nom').value.trim();
-  const role = document.getElementById('role').value.trim();
-  const service = document.getElementById('service').value.trim();
+  const service_id = serviceSelect.value;
 
-  if (!nom || !role || !service) {
+  if (!nom || !service_id) {
     formError.textContent = 'Tous les champs sont obligatoires.';
     return;
   }
 
   const action = id ? 'update' : 'add';
-  const payload = { id, nom, role, service };
+  const payload = { id, nom, service_id };
 
   try {
     const res = await fetch(`../../backend/tuteurs.php?action=${action}`, {
@@ -148,13 +147,32 @@ searchInput.addEventListener('input', () => {
   const term = searchInput.value.toLowerCase();
   filteredTuteurs = tuteurs.filter(t =>
     t.nom.toLowerCase().includes(term) ||
-    t.role.toLowerCase().includes(term) ||
-    t.service.toLowerCase().includes(term)
+    (t.service_nom && t.service_nom.toLowerCase().includes(term))
   );
   currentPage = 1;
   renderTable();
   renderPagination();
 });
 
+// Charger les services dans le select
+async function loadServices() {
+  try {
+    const res = await fetch('../../backend/services.php');
+    const data = await res.json();
+    if (data.success && Array.isArray(data.services)) {
+      serviceSelect.innerHTML = '<option value="">-- Choisir un service --</option>';
+      data.services.forEach(service => {
+        const option = document.createElement('option');
+        option.value = service.id;
+        option.textContent = service.nom;
+        serviceSelect.appendChild(option);
+      });
+    }
+  } catch (error) {
+    console.error('Erreur chargement services', error);
+  }
+}
+
 // Chargement initial
+loadServices();
 loadTuteurs();

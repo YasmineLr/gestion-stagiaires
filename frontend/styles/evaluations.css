@@ -32,3 +32,23 @@ input, textarea, select, button {
   border-top: 1px solid #ddd;
   padding-top: 20px;
 }
+/* Ajoute dans ton fichier CSS (ex: evaluations.css) */
+
+.modal {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px 30px;
+  border-radius: 6px;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 0 15px rgba(0,0,0,0.3);
+}

@@ -8,79 +8,112 @@ const searchInput = document.getElementById('searchInput');
 const filterService = document.getElementById('filterService');
 const filterStatut = document.getElementById('filterStatut');
 
-// Charger les stagiaires et remplir le tableau + filtres service
+const serviceSelect = document.getElementById('serviceSelect'); // le select dans le formulaire
+
+let services = []; // stocker la liste des services {id, nom}
+
+// Charger les services depuis backend/services.php (à créer)
+// et remplir le select et le filtre
+async function chargerServices() {
+  try {
+    const res = await fetch("../../backend/services.php");
+    const data = await res.json();
+    if (data.success && Array.isArray(data.services)) {
+      services = data.services;
+
+      // Remplir select formulaire
+      serviceSelect.innerHTML = '<option value="">-- Choisir un service --</option>';
+      services.forEach(s => {
+        const option = document.createElement('option');
+        option.value = s.id;
+        option.textContent = s.nom;
+        serviceSelect.appendChild(option);
+      });
+
+      // Remplir filtre service
+      filterService.innerHTML = '<option value="">Filtrer par service</option>';
+      services.forEach(s => {
+        const option = document.createElement('option');
+        option.value = s.id;
+        option.textContent = s.nom;
+        filterService.appendChild(option);
+      });
+    }
+  } catch (err) {
+    console.error("Erreur chargement services :", err);
+  }
+}
+
+// Charger stagiaires
 async function chargerStagiaires() {
   try {
     const res = await fetch("../../backend/stagiaires.php?action=list");
     const data = await res.json();
     if (data.success) {
       tableBody.innerHTML = "";
-      
-      // Récupérer les services uniques pour remplir le filtre
-      const services = [...new Set(data.stagiaires.map(s => s.service).filter(s => s))];
-      remplirFiltresServices(services);
 
       data.stagiaires.forEach(s => {
+        // Trouver nom service par id
+        const service = services.find(ser => ser.id == s.service_id);
+        const nomService = service ? service.nom : "Non défini";
+
         const stagiaireData = JSON.stringify(s).replace(/'/g, "&apos;");
+
         const row = `
           <tr>
             <td>${s.nom || ''}</td>
-            <td>${s.service || ''}</td>
+            <td>${nomService}</td>
             <td>${s.statut || ''}</td>
             <td>${s.adresse || ''}</td>
             <td>${s.telephone || ''}</td>
             <td>${s.parcours || ''}</td>
-            <td>
-              ${s.document ? `<a href="../../backend/uploads/${s.document}" target="_blank">Voir</a>` : 'Aucun'}
-            </td>
+            <td>${s.document ? `<a href="../../backend/uploads/${s.document}" target="_blank">Voir</a>` : 'Aucun'}</td>
             <td>
               <button class="btn btn-sm btn-warning me-1" data-stagiaire='${stagiaireData}' onclick="onClickModifier(this)">Modifier</button>
-              <button class="btn btn-sm btn-danger" onclick='supprimerStagiaire(${s.id})'>Supprimer</button>
+              <button class="btn btn-sm btn-danger me-1" onclick='supprimerStagiaire(${s.id})'>Supprimer</button>
+              <button class="btn btn-sm btn-success" onclick='terminerStagiaire(${s.id}, "${s.statut}")'>Terminer</button>
             </td>
           </tr>
         `;
         tableBody.innerHTML += row;
       });
 
-      filtrerStagiaires(); // Appliquer le filtre après chargement
+      filtrerStagiaires();
     }
   } catch (err) {
     console.error("Erreur de chargement :", err);
   }
 }
 
-function remplirFiltresServices(services) {
-  filterService.innerHTML = '<option value="">Filtrer par service</option>';
-  services.forEach(service => {
-    filterService.innerHTML += `<option value="${service.toLowerCase()}">${service}</option>`;
-  });
-}
-
 function filtrerStagiaires() {
   const recherche = searchInput.value.toLowerCase();
-  const serviceChoisi = filterService.value.toLowerCase();
+  const serviceChoisi = filterService.value;
   const statutChoisi = filterStatut.value.toLowerCase();
-   console.log("Filtrage avec : recherche=", recherche, " service=", serviceChoisi, " statut=", statutChoisi);
-
 
   Array.from(tableBody.rows).forEach(row => {
     const nom = row.cells[0].textContent.toLowerCase();
-    const service = row.cells[1].textContent.toLowerCase();
+    // On compare service_id via le texte visible du nom de service
+    const serviceNom = row.cells[1].textContent;
     const statut = row.cells[2].textContent.toLowerCase();
 
     const matchRecherche = nom.includes(recherche);
-    const matchService = serviceChoisi === '' || service === serviceChoisi;
+    const matchService = serviceChoisi === '' || (services.find(s => s.nom === serviceNom)?.id == serviceChoisi);
     const matchStatut = statutChoisi === '' || statut === statutChoisi;
-   console.log("Ligne:", nom, service, statut, " => ", matchRecherche && matchService && matchStatut);
+
     row.style.display = (matchRecherche && matchService && matchStatut) ? '' : 'none';
   });
 }
 
+// Gérer formulaire submit
 form.addEventListener("submit", async e => {
   e.preventDefault();
   console.log("Formulaire soumis");
 
   const formData = new FormData(form);
+
+  if (!formData.get("id")) {
+    formData.delete("id");
+  }
 
   const res = await fetch("../../backend/stagiaires.php?action=add", {
     method: "POST",
@@ -105,24 +138,24 @@ form.addEventListener("submit", async e => {
   }
 });
 
-// Modifier stagiaire
+// Modifier
 function onClickModifier(button) {
   const stagiaire = JSON.parse(button.getAttribute('data-stagiaire'));
   modifierStagiaire(stagiaire);
 }
 
 function modifierStagiaire(stagiaire) {
-  console.log("Données à modifier :", stagiaire);
   document.getElementById("id").value = stagiaire.id;
   document.getElementById("nom").value = stagiaire.nom;
-  document.getElementById("service").value = stagiaire.service;
+  // mettre service_id dans select
+  document.getElementById("serviceSelect").value = stagiaire.service_id || '';
   document.getElementById("statut").value = stagiaire.statut;
   document.getElementById("telephone").value = stagiaire.telephone;
   document.getElementById("adresse").value = stagiaire.adresse;
   document.getElementById("parcours").value = stagiaire.parcours;
 }
 
-// Supprimer stagiaire
+// Supprimer
 async function supprimerStagiaire(id) {
   if (!confirm("Confirmer la suppression ?")) return;
 
@@ -138,10 +171,39 @@ async function supprimerStagiaire(id) {
   }
 }
 
-// Écouteurs pour filtrage en direct
+// Terminer
+window.terminerStagiaire = async function(id, statut) {
+  if (statut.trim().toLowerCase() === "actif") {
+    if (!confirm("Voulez-vous terminer ce stagiaire ?")) return;
+
+    try {
+      const res = await fetch("../../backend/stagiaires.php?action=terminer", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id })
+      });
+
+      const result = await res.json();
+      if (result.success) {
+        await chargerStagiaires();
+      } else {
+        alert("Erreur : " + result.message);
+      }
+    } catch (err) {
+      console.error("Erreur :", err);
+      alert("Erreur serveur");
+    }
+  } else {
+    alert("Ce stagiaire est déjà terminé.");
+  }
+};
+
 searchInput.addEventListener('input', filtrerStagiaires);
 filterService.addEventListener('change', filtrerStagiaires);
 filterStatut.addEventListener('change', filtrerStagiaires);
 
-// Chargement initial
-chargerStagiaires();
+// Charger services d'abord, puis stagiaires
+(async function init() {
+  await chargerServices();
+  await chargerStagiaires();
+})();

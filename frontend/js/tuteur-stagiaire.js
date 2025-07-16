@@ -14,7 +14,6 @@ async function loadOptions() {
       tuteurSelect.innerHTML = '<option value="">-- Choisir un tuteur --</option>';
 
       data.stagiaires.forEach(s => {
-        // Utiliser s.nom ? sinon concat prénom + nom pour plus d'infos
         const nomComplet = s.prenom ? `${s.prenom} ${s.nom}` : s.nom;
         stagiaireSelect.innerHTML += `<option value="${s.id}">${nomComplet}</option>`;
       });
@@ -38,13 +37,9 @@ async function loadAffectations() {
 
     if (data.success) {
       tableBody.innerHTML = "";
-      console.log("Affectations reçues :", data.affectations);
 
       data.affectations.forEach(a => {
-        // note peut être null ou undefined, on affiche 'Non noté'
         const note = (a.note !== null && a.note !== undefined) ? a.note : 'Non noté';
-
-        // Sécuriser l'affichage en cas de données manquantes
         const nomStagiaire = a.nom_stagiaire || "Nom stagiaire inconnu";
         const nomTuteur = a.nom_tuteur || "Nom tuteur inconnu";
         const dateAffect = a.date_affectation || "-";
@@ -116,7 +111,7 @@ async function deleteAffectation(id) {
     if (data.success) {
       await loadAffectations();
     } else {
-      alert("Erreur suppression");
+      alert(data.message || "Erreur suppression");
     }
   } catch (err) {
     alert("Erreur réseau ou serveur");
