@@ -1,0 +1,54 @@
+<?php
+header('Content-Type: application/json');
+
+try {
+    $pdo = new PDO("mysql:host=localhost;dbname=gestion-stagiaires;charset=utf8", "root", "");
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    $action = $_GET['action'] ?? '';
+
+    if ($action === 'list') {
+        $sql = "
+        SELECT 
+            st.id AS id_stagiaire,
+            st.nom AS nom,
+            st.prenom AS prenom,
+            sg.date_debut,
+            sg.date_fin,
+            s.nom AS service_nom,
+            sg.type_stage,
+            sg.nom_stage,
+            sg.document_stage,
+            ev.note,
+            ev.commentaires,
+            ts.date_affectation,
+            t.nom AS nom_tuteur,
+            t.prenom AS prenom_tuteur
+        FROM stagiaires st
+        JOIN stages sg ON sg.stagiaire_id = st.id
+        LEFT JOIN services s ON sg.service_id = s.id
+        LEFT JOIN evaluations ev ON ev.stagiaire_id = st.id
+        LEFT JOIN tuteur_stagiaire ts ON ts.stagiaire_id = st.id AND ts.supprime = 0
+        LEFT JOIN tuteurs t ON t.id = ts.tuteur_id
+        WHERE LOWER(st.statut) = 'terminé' AND st.supprime = 0
+        ORDER BY st.id DESC
+        ";
+
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute();
+        $records = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        echo json_encode([
+            'success' => true,
+            'records' => $records
+        ]);
+        exit;
+    }
+
+    echo json_encode(['success' => false, 'message' => 'Action non valide']);
+    exit;
+
+} catch (PDOException $e) {
+    echo json_encode(['success' => false, 'message' => 'Erreur DB : ' . $e->getMessage()]);
+    exit;
+}
