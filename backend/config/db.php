@@ -1,6 +1,6 @@
 <?php
 $host = 'localhost';
-$dbname = 'gestion_stagiaires';
+$dbname = 'gestion-stagiaires';
 $user = 'root';
 $pass = '';
 
