@@ -1,6 +1,6 @@
 <?php
 header('Content-Type: application/json');
-$pdo = new PDO("mysql:host=localhost;dbname=gestion_stagiaires;charset=utf8", "root", "");
+$pdo = new PDO("mysql:host=localhost;post=3307;dbname=gestion_stagiaires;charset=utf8", "root", "");
 
 $data = [
   "total" => 0,

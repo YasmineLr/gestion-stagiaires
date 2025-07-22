@@ -1,30 +1,11 @@
 document.addEventListener("DOMContentLoaded", function () {
-  const role = localStorage.getItem("userRole"); // Doit être 'admin' ou 'tuteur'
-  const link = document.getElementById("first-login-link");
+  const role = localStorage.getItem("userRole");
 
-  // Redirection lien si nécessaire (optionnel)
-  if (link && role) {
-    if (role === "admin") {
-      link.href = "tuteurs.html";
-    } else if (role === "tuteur") {
-      link.href = "login_tuteur.html";
-    }
-  }
-
-  // Charger header
-  fetch("../pages/header.html")
-    .then((res) => res.text())
-    .then((data) => {
-      document.getElementById("header-placeholder").innerHTML = data;
-    });
-
-  // Connexion utilisateur
   document.getElementById("loginForm").addEventListener("submit", function (e) {
     e.preventDefault();
 
-    const email = document.getElementById("email").value.trim(); // utilisé comme username
+    const email = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value.trim();
-    const role = localStorage.getItem("userRole");
 
     if (!role || (role !== "admin" && role !== "tuteur")) {
       document.getElementById("error").textContent =
@@ -32,24 +13,23 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    fetch("../php/auth.php", {
+    fetch("../../backend/checklogin.php", {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
       },
-      body: `username=${encodeURIComponent(
-        email
-      )}&password=${encodeURIComponent(password)}&role=${encodeURIComponent(
-        role
-      )}`,
+      body: `email=${encodeURIComponent(email)}&password=${encodeURIComponent(
+        password
+      )}&role=${encodeURIComponent(role)}`,
     })
       .then((response) => response.json())
       .then((data) => {
         if (data.success) {
+          // Redirection selon le rôle
           if (role === "admin") {
-            window.location.href = "admin_dashboard.php";
+            window.location.href = "tuteurs.html";
           } else if (role === "tuteur") {
-            window.location.href = "tuteur_dashboard.php";
+            window.location.href = "dashboard_tuteurs.html";
           }
         } else {
           document.getElementById("error").textContent =
