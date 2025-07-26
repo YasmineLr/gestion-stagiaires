@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", function () {
           if (role === "admin") {
             window.location.href = "tuteurs.html";
           } else if (role === "tuteur") {
-            window.location.href = "dashboard_tuteurs.html";
+            window.location.href = "tuteur.html";
           }
         } else {
           document.getElementById("error").textContent =
