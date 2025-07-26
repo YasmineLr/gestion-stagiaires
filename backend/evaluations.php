@@ -2,11 +2,11 @@
 header('Content-Type: application/json');
 
 try {
-    $pdo = new PDO("mysql:host=localhost;dbname=gestion-stagiaires;charset=utf8", "root", "");
+    $pdo = new PDO("mysql:host=localhost;port=3307;dbname=gestion-stagiaires;charset=utf8", "root", "");
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-        // Récupérer toutes les évaluations avec nom complet stagiaire
+        // Tous les stagiaires, même sans évaluation
         $stmt = $pdo->query("
             SELECT 
                 s.id AS stagiaire_id,
@@ -15,8 +15,8 @@ try {
                 e.commentaires,
                 e.ameliorations,
                 e.date_evaluation
-            FROM evaluations e
-            JOIN stagiaires s ON e.stagiaire_id = s.id
+            FROM stagiaires s
+            LEFT JOIN evaluations e ON s.id = e.stagiaire_id
             WHERE s.supprime = 0
         ");
         $evaluations = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -25,28 +25,23 @@ try {
     }
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        // Récupérer données POST
         $stagiaire_id = $_POST['stagiaire_id'] ?? null;
         $note = $_POST['note'] ?? null;
         $commentaire = $_POST['commentaire'] ?? '';
         $ameliorations = $_POST['ameliorations'] ?? '';
 
-        // Validation simple
         if (!$stagiaire_id || !is_numeric($note)) {
             echo json_encode(['success' => false, 'message' => 'Données invalides']);
             exit;
         }
 
-        // Définir un tuteur_id fixe (à adapter selon ta session)
-        $tuteur_id = 1;
+        $tuteur_id = 1; // À adapter selon la session
         $date_evaluation = date('Y-m-d');
 
-        // Vérifier si une évaluation existe déjà pour ce stagiaire
         $check = $pdo->prepare("SELECT id FROM evaluations WHERE stagiaire_id = ?");
         $check->execute([$stagiaire_id]);
 
         if ($check->rowCount() > 0) {
-            // Mise à jour
             $stmt = $pdo->prepare("
                 UPDATE evaluations 
                 SET note = ?, commentaires = ?, ameliorations = ?, tuteur_id = ?, date_evaluation = ?
@@ -54,7 +49,6 @@ try {
             ");
             $stmt->execute([$note, $commentaire, $ameliorations, $tuteur_id, $date_evaluation, $stagiaire_id]);
         } else {
-            // Ajout
             $stmt = $pdo->prepare("
                 INSERT INTO evaluations (stagiaire_id, tuteur_id, note, commentaires, ameliorations, date_evaluation) 
                 VALUES (?, ?, ?, ?, ?, ?)
@@ -66,7 +60,6 @@ try {
         exit;
     }
 
-    // Méthode non gérée
     echo json_encode(['success' => false, 'message' => 'Méthode HTTP non autorisée']);
     exit;
 

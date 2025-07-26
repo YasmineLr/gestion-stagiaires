@@ -128,6 +128,11 @@ form.addEventListener("submit", async e => {
     if (result.success) {
       form.reset();
       formError.textContent = "";
+
+      // Fermer la modale après ajout ou modification
+      const modal = bootstrap.Modal.getInstance(document.getElementById('modalAjouterStagiaire'));
+      if (modal) modal.hide();
+
       await chargerStagiaires();
     } else {
       formError.textContent = result.message || "Erreur lors de l'enregistrement";
@@ -142,6 +147,10 @@ form.addEventListener("submit", async e => {
 function onClickModifier(button) {
   const stagiaire = JSON.parse(button.getAttribute('data-stagiaire'));
   modifierStagiaire(stagiaire);
+
+  // Ouvrir la modale à la modification aussi
+  const modal = new bootstrap.Modal(document.getElementById('modalAjouterStagiaire'));
+  modal.show();
 }
 
 function modifierStagiaire(stagiaire) {

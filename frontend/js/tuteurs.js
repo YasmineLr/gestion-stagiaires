@@ -10,7 +10,7 @@ const modalTitle = document.getElementById('modalTitle');
 const tuteurForm = document.getElementById('tuteurForm');
 const formError = document.getElementById('formError');
 const searchInput = document.getElementById('searchInput');
-const serviceSelect = document.getElementById('serviceSelect'); // select
+const serviceSelect = document.getElementById('serviceSelect');
 
 async function loadTuteurs() {
   try {
@@ -38,7 +38,7 @@ function renderTable() {
   for (const tuteur of pageTuteurs) {
     const tr = document.createElement('tr');
     tr.innerHTML = `
-      <td>${tuteur.nom}</td>
+      <td>${tuteur.prenom ?? ''} ${tuteur.nom}</td>
       <td>${tuteur.service_nom || 'Non défini'}</td>
       <td class="actions">
         <button class="btn btn-sm btn-warning me-1" onclick="openEditForm(${tuteur.id})">Modifier</button>
@@ -70,7 +70,6 @@ document.getElementById('addBtn').addEventListener('click', () => {
   formError.textContent = '';
   tuteurForm.reset();
   document.getElementById('tuteurId').value = '';
-  serviceSelect.value = '';
   formModal.style.display = 'flex';
 });
 
@@ -81,6 +80,7 @@ function openEditForm(id) {
   modalTitle.textContent = 'Modifier le tuteur';
   formError.textContent = '';
   document.getElementById('tuteurId').value = tuteur.id;
+  document.getElementById('prenom').value = tuteur.prenom;
   document.getElementById('nom').value = tuteur.nom;
   serviceSelect.value = tuteur.service_id || '';
   formModal.style.display = 'flex';
@@ -96,15 +96,16 @@ tuteurForm.addEventListener('submit', async e => {
 
   const id = document.getElementById('tuteurId').value;
   const nom = document.getElementById('nom').value.trim();
+  const prenom = document.getElementById('prenom').value.trim();
   const service_id = serviceSelect.value;
 
-  if (!nom || !service_id) {
+  if (!prenom || !nom || !service_id) {
     formError.textContent = 'Tous les champs sont obligatoires.';
     return;
   }
 
   const action = id ? 'update' : 'add';
-  const payload = { id, nom, service_id };
+  const payload = { id, nom, prenom, service_id };
 
   try {
     const res = await fetch(`../../backend/tuteurs.php?action=${action}`, {
@@ -146,7 +147,7 @@ async function deleteTuteur(id) {
 searchInput.addEventListener('input', () => {
   const term = searchInput.value.toLowerCase();
   filteredTuteurs = tuteurs.filter(t =>
-    t.nom.toLowerCase().includes(term) ||
+    (t.prenom + ' ' + t.nom).toLowerCase().includes(term) ||
     (t.service_nom && t.service_nom.toLowerCase().includes(term))
   );
   currentPage = 1;
@@ -154,7 +155,6 @@ searchInput.addEventListener('input', () => {
   renderPagination();
 });
 
-// Charger les services dans le select
 async function loadServices() {
   try {
     const res = await fetch('../../backend/services.php');
@@ -173,6 +173,5 @@ async function loadServices() {
   }
 }
 
-// Chargement initial
 loadServices();
 loadTuteurs();

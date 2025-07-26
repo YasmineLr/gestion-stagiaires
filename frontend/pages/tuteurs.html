@@ -97,27 +97,32 @@
       <div class="modal-content p-4 bg-white rounded shadow">
         <h3 id="modalTitle">Ajouter un tuteur</h3>
         <form id="tuteurForm">
-          <input type="hidden" id="tuteurId" />
+  <input type="hidden" id="tuteurId" />
 
-          <div class="mb-3">
-            <label for="nom" class="form-label">Nom *</label>
-            <input type="text" id="nom" class="form-control" required />
-          </div>
+  <div class="mb-3">
+    <label for="prenom" class="form-label">Prénom *</label>
+    <input type="text" id="prenom" class="form-control" required />
+  </div>
 
-          <div class="mb-3">
-            <label for="serviceSelect" class="form-label">Service *</label>
-            <select id="serviceSelect" class="form-select" required>
-              <option value="">-- Choisir un service --</option>
-              <!-- Options chargées dynamiquement -->
-            </select>
-          </div>
+  <div class="mb-3">
+    <label for="nom" class="form-label">Nom *</label>
+    <input type="text" id="nom" class="form-control" required />
+  </div>
 
-          <div class="error text-danger mt-2" id="formError"></div>
-          <div class="form-buttons mt-3 d-flex justify-content-end">
-            <button type="button" id="cancelBtn" class="btn btn-secondary me-2">Annuler</button>
-            <button type="submit" id="saveBtn" class="btn btn-success">Enregistrer</button>
-          </div>
-        </form>
+  <div class="mb-3">
+    <label for="serviceSelect" class="form-label">Service *</label>
+    <select id="serviceSelect" class="form-select" required>
+      <option value="">-- Choisir un service --</option>
+    </select>
+  </div>
+
+  <div class="error text-danger mt-2" id="formError"></div>
+  <div class="form-buttons mt-3 d-flex justify-content-end">
+    <button type="button" id="cancelBtn" class="btn btn-secondary me-2">Annuler</button>
+    <button type="submit" id="saveBtn" class="btn btn-success">Enregistrer</button>
+  </div>
+</form>
+
       </div>
     </div>
   </div>

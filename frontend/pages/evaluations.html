@@ -62,21 +62,29 @@
             <a class="nav-link " href="stagiaires.html" aria-current="page">Générale</a>
           </li>
           <li class="nav-item nav-item2">
-            <a class="nav-link active" href="evaluations.html">Tueurs-stagiaires</a>
+            <a class="nav-link active" href="evaluations.html">Evaluations</a>
           </li>
          
         </ul>
       </div>
     </nav>
   </div>
-  <div style="margin-top: 30px;" class="search-filter">
-    <input type="text" id="searchInput" placeholder="Rechercher un stagiaire par nom...">
-    <select id="noteFilter">
-      <option value="">Filtrer par note</option>
-      <option value="asc">Note croissante</option>
-      <option value="desc">Note décroissante</option>
-    </select>
+  <!-- Barre de recherche et filtres -->
+<div class="container mt-3 ol-md-4">
+  <div class="row align-items-center mb-3">
+    <div class="col-md-4">
+      <input type="text" id="searchInput" class="form-control" placeholder="Rechercher un stagiaire par nom...">
+    </div>
+    <div class="col-md-6 mt-2 mt-md-0">
+      <select id="noteFilter" class="form-select">
+        <option value="">Filtrer par note</option>
+        <option value="asc">Note croissante</option>
+        <option value="desc">Note décroissante</option>
+      </select>
+    </div>
+    
   </div>
+</div>
 
   <!-- Tableau des évaluations -->
   <table id="evaluationsTable">
@@ -120,6 +128,7 @@
 
 
   <script src="../js/evaluations.js"></script>
-  
+  <script src="../js/stagiaires.js"></script>
+ <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -32,9 +32,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Trier par note si demandé
         if (noteFilter.value === "asc") {
-          filtered.sort((a, b) => a.note - b.note);
+          filtered.sort((a, b) => (a.note ?? 0) - (b.note ?? 0));
         } else if (noteFilter.value === "desc") {
-          filtered.sort((a, b) => b.note - a.note);
+          filtered.sort((a, b) => (b.note ?? 0) - (a.note ?? 0));
         }
 
         // Afficher les lignes
@@ -45,18 +45,20 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         filtered.forEach(evaluation => {
-          // Échapper apostrophes pour l'injection JS dans onclick
           const commentairesEscaped = (evaluation.commentaires || '').replace(/'/g, "\\'");
           const ameliorationsEscaped = (evaluation.ameliorations || '').replace(/'/g, "\\'");
+
+          const noteAffichee = (evaluation.note !== null && evaluation.note !== "") ? evaluation.note : "Non noté";
+          const commentaireAffiche = (evaluation.commentaires !== null && evaluation.commentaires !== "") ? evaluation.commentaires : "-";
 
           tableBody.innerHTML += `
             <tr>
               <td>${evaluation.nom}</td>
-              <td>${evaluation.note}</td>
-              <td>${evaluation.commentaires || ''}</td>
+              <td>${noteAffichee}</td>
+              <td>${commentaireAffiche}</td>
               <td>
                 <button class="btn btn-sm btn-warning me-1" 
-                  onclick="editEvaluation(${evaluation.stagiaire_id}, ${evaluation.note}, '${commentairesEscaped}', '${ameliorationsEscaped}')">
+                  onclick="editEvaluation(${evaluation.stagiaire_id}, ${evaluation.note || 0}, '${commentairesEscaped}', '${ameliorationsEscaped}')">
                   Modifier
                 </button>
               </td>

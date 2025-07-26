@@ -8,7 +8,6 @@ try {
     $action = $_GET['action'] ?? '';
 
     if ($action === 'list') {
-        // Récupérer stagiaires avec nom service via JOIN
         $stmt = $pdo->query("
             SELECT st.*, s.nom AS service_nom
             FROM stagiaires st
@@ -22,7 +21,7 @@ try {
     }
 
     if ($action === 'add') {
-        $id = !empty($_POST['id']) ? $_POST['id'] : null;
+        $id = $_POST['id'] ?? null;
         $nom = $_POST['nom'] ?? '';
         $service_id = $_POST['service_id'] ?? '';
         $statut = $_POST['statut'] ?? '';
@@ -31,8 +30,15 @@ try {
         $parcours = $_POST['parcours'] ?? '';
         $documentNomFichier = null;
 
-        if (!$nom || !$service_id || !$statut) {
-            echo json_encode(['success' => false, 'message' => 'Nom, service et statut sont obligatoires']);
+        // Champs stage supplémentaires
+        $date_debut = $_POST['date_debut'] ?? '';
+        $date_fin = $_POST['date_fin'] ?? '';
+        $sujet = $_POST['sujet'] ?? '';
+        $type_stage = $_POST['type_stage'] ?? '';
+        $nom_stage = $_POST['nom_stage'] ?? '';
+
+        if (!$nom || !$service_id || !$statut || !$date_debut || !$date_fin || !$type_stage || !$nom_stage) {
+            echo json_encode(['success' => false, 'message' => 'Tous les champs obligatoires doivent être remplis']);
             exit;
         }
 
@@ -50,7 +56,7 @@ try {
             }
         }
 
-        if (!empty($id)) {
+        if ($id) {
             if ($documentNomFichier) {
                 $stmt = $pdo->prepare("UPDATE stagiaires SET nom=?, service_id=?, statut=?, telephone=?, adresse=?, parcours=?, document=? WHERE id=?");
                 $stmt->execute([$nom, $service_id, $statut, $telephone, $adresse, $parcours, $documentNomFichier, $id]);
@@ -61,6 +67,11 @@ try {
         } else {
             $stmt = $pdo->prepare("INSERT INTO stagiaires (nom, service_id, statut, telephone, adresse, parcours, document, supprime) VALUES (?, ?, ?, ?, ?, ?, ?, 0)");
             $stmt->execute([$nom, $service_id, $statut, $telephone, $adresse, $parcours, $documentNomFichier]);
+            $stagiaire_id = $pdo->lastInsertId();
+
+            // Insertion du stage lié
+            $stmtStage = $pdo->prepare("INSERT INTO stages (stagiaire_id, service_id, date_debut, date_fin, sujet, type_stage, nom_stage) VALUES (?, ?, ?, ?, ?, ?, ?)");
+            $stmtStage->execute([$stagiaire_id, $service_id, $date_debut, $date_fin, $sujet, $type_stage, $nom_stage]);
         }
 
         echo json_encode(['success' => true]);

@@ -16,7 +16,7 @@ $input = json_decode($inputJSON, true);
 switch ($action) {
     case 'list':
         $stmt = $pdo->query("
-            SELECT t.id, t.nom, t.service_id, s.nom AS service_nom
+            SELECT t.id, t.prenom, t.nom, t.service_id, s.nom AS service_nom
             FROM tuteurs t
             LEFT JOIN services s ON t.service_id = s.id
             WHERE t.supprime = 0
@@ -26,22 +26,22 @@ switch ($action) {
         break;
 
     case 'add':
-        if (empty($input['nom']) || empty($input['service_id'])) {
+        if (empty($input['prenom']) || empty($input['nom']) || empty($input['service_id'])) {
             echo json_encode(['success' => false, 'message' => 'Tous les champs sont obligatoires']);
             exit;
         }
-        $stmt = $pdo->prepare("INSERT INTO tuteurs (nom, service_id, supprime) VALUES (?, ?, 0)");
-        $stmt->execute([$input['nom'], $input['service_id']]);
+        $stmt = $pdo->prepare("INSERT INTO tuteurs (prenom, nom, service_id, supprime) VALUES (?, ?, ?, 0)");
+        $stmt->execute([$input['prenom'], $input['nom'], $input['service_id']]);
         echo json_encode(['success' => true]);
         break;
 
     case 'update':
-        if (empty($input['id']) || empty($input['nom']) || empty($input['service_id'])) {
+        if (empty($input['id']) || empty($input['prenom']) || empty($input['nom']) || empty($input['service_id'])) {
             echo json_encode(['success' => false, 'message' => 'Tous les champs sont obligatoires']);
             exit;
         }
-        $stmt = $pdo->prepare("UPDATE tuteurs SET nom = ?, service_id = ? WHERE id = ?");
-        $stmt->execute([$input['nom'], $input['service_id'], $input['id']]);
+        $stmt = $pdo->prepare("UPDATE tuteurs SET prenom = ?, nom = ?, service_id = ? WHERE id = ?");
+        $stmt->execute([$input['prenom'], $input['nom'], $input['service_id'], $input['id']]);
         echo json_encode(['success' => true]);
         break;
 

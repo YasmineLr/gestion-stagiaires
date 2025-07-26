@@ -15,28 +15,31 @@ async function chargerHistorique() {
 
       data.records.forEach(rec => {
         const documents = rec.document_stage
-          ? `<a href="../../backend/uploads/${rec.document_stage}" target="_blank">Voir</a>` : 'Aucun';
+          ? `<a href="../../backend/uploads/${rec.document_stage}" target="_blank">Voir</a>` 
+          : 'Aucun';
 
-        const note = rec.note !== undefined && rec.note !== null ? rec.note : '-';
+        const note = (rec.note !== undefined && rec.note !== null) ? rec.note : '-';
         const commentaires = rec.commentaires ? rec.commentaires : '-';
 
-        const nomTuteur = rec.nom_tuteur || rec.prenom_tuteur
+        const nomTuteur = (rec.prenom_tuteur || rec.nom_tuteur)
           ? `${rec.prenom_tuteur || ''} ${rec.nom_tuteur || ''}`.trim()
           : '-';
 
+        const nomStagiaire = `${rec.nom || ''} ${rec.prenom || ''}`.trim() || '-';
+
         const row = `
           <tr>
-            <td>${rec.nom} ${rec.prenom || ''}</td>
-            <td>${rec.date_debut || '-'}</td>
-            <td>${rec.date_fin || '-'}</td>
-            <td>${rec.service_nom || '-'}</td>
-            <td>${rec.type_stage || '-'}</td>
-            <td>${rec.nom_stage || '-'}</td>
-            <td>${note}</td>
-            <td>${commentaires}</td>
-            <td>${documents}</td>
-            <td>${nomTuteur}</td>
-            <td>${rec.date_affectation || '-'}</td>
+            <td>${nomStagiaire}</td>                  <!-- Nom du stagiaire -->
+            <td>${nomTuteur}</td>                     <!-- Tuteur -->
+            <td>${rec.date_affectation || '-'}</td>  <!-- Date affectation -->
+            <td>${rec.date_debut || '-'}</td>        <!-- Date début -->
+            <td>${rec.date_fin || '-'}</td>          <!-- Date fin -->
+            <td>${rec.service_nom || '-'}</td>       <!-- Service -->
+            <td>${rec.type_stage || '-'}</td>        <!-- Type de stage -->
+            <td>${rec.nom_stage || '-'}</td>         <!-- Nom du stage -->
+            <td>${note}</td>                          <!-- Note -->
+            <td>${commentaires}</td>                  <!-- Commentaires -->
+            <td>${documents}</td>                     <!-- Documents -->
           </tr>
         `;
         tableBody.innerHTML += row;

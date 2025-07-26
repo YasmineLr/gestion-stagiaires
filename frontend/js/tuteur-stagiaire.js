@@ -4,6 +4,7 @@ const affectationForm = document.getElementById("affectationForm");
 const formError = document.getElementById("formError");
 const tableBody = document.querySelector("#affectationsTable tbody");
 
+// Charger options (stagiaires non affectés + tuteurs)
 async function loadOptions() {
   try {
     const res = await fetch("../../backend/tuteur_stagiaire.php?action=load-options");
@@ -30,6 +31,7 @@ async function loadOptions() {
   }
 }
 
+// Charger affectations et grouper par tuteur avec rowspan
 async function loadAffectations() {
   try {
     const res = await fetch("../../backend/tuteur_stagiaire.php?action=list");
@@ -38,25 +40,40 @@ async function loadAffectations() {
     if (data.success) {
       tableBody.innerHTML = "";
 
-      data.affectations.forEach(a => {
-        const note = (a.note !== null && a.note !== undefined) ? a.note : 'Non noté';
-        const nomStagiaire = a.nom_stagiaire || "Nom stagiaire inconnu";
-        const nomTuteur = a.nom_tuteur || "Nom tuteur inconnu";
-        const dateAffect = a.date_affectation || "-";
-
-        const row = `
-          <tr>
-            <td>${nomStagiaire}</td>
-            <td>${nomTuteur}</td>
-            <td>${dateAffect}</td>
-            <td>${note}</td>
-            <td>
-              <button class="btn btn-danger btn-sm" onclick="deleteAffectation(${a.id})">Supprimer</button>
-            </td>
-          </tr>
-        `;
-        tableBody.innerHTML += row;
+      // Grouper par tuteur
+      const groupes = {};
+      data.affectations.forEach(item => {
+        const tuteur = item.nom_tuteur || "Inconnu";
+        if (!groupes[tuteur]) groupes[tuteur] = [];
+        groupes[tuteur].push(item);
       });
+
+      // Construire les lignes avec rowspan pour tuteur
+      for (const [tuteur, stagiaires] of Object.entries(groupes)) {
+        stagiaires.forEach((affect, index) => {
+          const note = (affect.note !== null && affect.note !== undefined) ? affect.note : 'Non noté';
+          const sujet = affect.sujet || '-';
+          const nomStagiaire = affect.nom_stagiaire || 'Inconnu';
+          const dateAffect = affect.date_affectation || '-';
+
+          let row = "<tr>";
+          if (index === 0) {
+            row += `<td rowspan="${stagiaires.length}">${tuteur}</td>`;
+          }
+          row += `
+            <td>${nomStagiaire}</td>
+            <td>${sujet}</td>
+            <td>${note}</td>
+            <td>${dateAffect}</td>
+            <td>
+              <button class="btn btn-danger btn-sm" onclick="deleteAffectation(${affect.id})">Supprimer</button>
+            </td>
+          `;
+          row += "</tr>";
+
+          tableBody.innerHTML += row;
+        });
+      }
     } else {
       console.error("Erreur API list:", data.message);
     }
