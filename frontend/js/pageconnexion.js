@@ -18,6 +18,7 @@ document.addEventListener("DOMContentLoaded", function () {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
       },
+      credentials: "include", // 🔥🔥🔥 ceci est OBLIGATOIRE pour activer les sessions
       body: `email=${encodeURIComponent(email)}&password=${encodeURIComponent(
         password
       )}&role=${encodeURIComponent(role)}`,
@@ -29,7 +30,7 @@ document.addEventListener("DOMContentLoaded", function () {
           if (role === "admin") {
             window.location.href = "tuteurs.html";
           } else if (role === "tuteur") {
-            window.location.href = "tuteur.html";
+            window.location.href = "../../backend/tuteur.php";
           }
         } else {
           document.getElementById("error").textContent =

@@ -1,15 +1,72 @@
 body {
-  background-color: #f9f9f9;
-  font-family: "Open Sans", sans-serif;
+  background-color: #f4f8fc;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding-top: 150px;
 }
 
+/* Titre principal */
 h2 {
-  font-weight: bold;
-  color: #333;
+  text-align: center;
+  margin-bottom: 30px;
+  color: #2b4c6f;
+  font-size: 28px;
 }
 
+/* Tableau stylisé */
 .table {
-  background-color: white;
-  border-radius: 5px;
+  width: 90%;
+  margin: auto;
+  border-collapse: collapse;
+  background-color: #ffffff;
+  border-radius: 12px;
   overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* En-tête */
+.table thead {
+  background-color: #e0ecf8;
+  color: #2b4c6f;
+  font-weight: bold;
+}
+
+.table th,
+.table td {
+  padding: 16px 20px;
+  text-align: center;
+  border-bottom: 1px solid #d6e1ec;
+}
+
+/* Coins arrondis */
+.table thead th:first-child {
+  border-top-left-radius: 12px;
+}
+.table thead th:last-child {
+  border-top-right-radius: 12px;
+}
+
+/* Ligne hover */
+.table tbody tr:hover {
+  background-color: #f0f6fb;
+  transition: background-color 0.3s ease-in-out;
+}
+
+/* Colonne nom alignée à gauche */
+.table td:first-child {
+  text-align: left;
+  font-weight: 500;
+  color: #1f3b57;
+}
+
+/* Pied vide si pas de données */
+.table tbody:empty::after {
+  content: "Aucun stagiaire trouvé.";
+  display: block;
+  text-align: center;
+  padding: 20px;
+  color: #888;
+}
+td .btn {
+  min-width: 90px;
 }

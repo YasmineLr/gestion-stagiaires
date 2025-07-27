@@ -1,0 +1,33 @@
+body {
+  background-color: #f3f8fc;
+  font-family: "Open Sans", sans-serif;
+}
+
+h2 {
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+.card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #dee2e6;
+}
+
+.btn-primary {
+  background-color: #5dade2;
+  border: none;
+}
+
+.btn-primary:hover {
+  background-color: #3498db;
+}
+
+#message {
+  font-weight: bold;
+}
+
+textarea,
+input[type="number"] {
+  resize: none;
+}
