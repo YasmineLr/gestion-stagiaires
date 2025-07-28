@@ -1,4 +1,6 @@
 <?php
+file_put_contents('debug.txt', print_r($_POST, true));
+
 session_start(); // ⚠️ Obligatoire pour utiliser $_SESSION
 
 ini_set('display_errors', 1);
@@ -14,6 +16,8 @@ try {
     $email = $_POST['email'] ?? '';
     $password = $_POST['password'] ?? '';
     $role = $_POST['role'] ?? '';
+    file_put_contents('php://stderr', "POST received: email=$email, password=$password, role=$role\n");
+
 
     if ($email && $password && $role) {
         if ($role === 'tuteur') {

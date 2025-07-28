@@ -105,43 +105,47 @@ function filtrerStagiaires() {
 }
 
 // Gérer formulaire submit
-form.addEventListener("submit", async e => {
+form.addEventListener("submit", async function(e) {
   e.preventDefault();
-  console.log("Formulaire soumis");
 
+  // Vérifie tous les champs requis
+  if (!form.checkValidity()) {
+    form.classList.add("was-validated");
+    return; // Stoppe ici : on n'envoie pas le formulaire si validation échoue
+  }
+
+  // Si tout est bon, on continue avec l'envoi AJAX
   const formData = new FormData(form);
-
   if (!formData.get("id")) {
     formData.delete("id");
   }
 
-  const res = await fetch("../../backend/stagiaires.php?action=add", {
-    method: "POST",
-    body: formData
-  });
-
-  const text = await res.text();
-  console.log("Réponse brute du serveur:", text);
-
   try {
+    const res = await fetch("../../backend/stagiaires.php?action=add", {
+      method: "POST",
+      body: formData
+    });
+
+    const text = await res.text();
     const result = JSON.parse(text);
+
     if (result.success) {
       form.reset();
-      formError.textContent = "";
+      form.classList.remove("was-validated");
 
-      // Fermer la modale après ajout ou modification
       const modal = bootstrap.Modal.getInstance(document.getElementById('modalAjouterStagiaire'));
       if (modal) modal.hide();
 
       await chargerStagiaires();
     } else {
-      formError.textContent = result.message || "Erreur lors de l'enregistrement";
+      formError.textContent = result.message || "Erreur lors de l'enregistrement.";
     }
   } catch (err) {
     console.error("Erreur JSON :", err);
     formError.textContent = "Erreur lors de l'enregistrement.";
   }
 });
+
 
 // Modifier
 function onClickModifier(button) {
