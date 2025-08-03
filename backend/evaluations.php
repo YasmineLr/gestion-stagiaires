@@ -14,9 +14,12 @@ try {
                 e.note,
                 e.commentaires,
                 e.ameliorations,
-                e.date_evaluation
+                e.date_evaluation,
+                srv.nom AS service_nom
             FROM stagiaires s
             LEFT JOIN evaluations e ON s.id = e.stagiaire_id
+            LEFT JOIN stages stg ON s.id = stg.stagiaire_id
+            LEFT JOIN services srv ON stg.service_id = srv.id
             WHERE s.supprime = 0
         ");
         $evaluations = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -35,9 +38,10 @@ try {
             exit;
         }
 
-        $tuteur_id = 1; // À adapter selon la session
+        $tuteur_id = 1; // À adapter dynamiquement si tu gères les sessions
         $date_evaluation = date('Y-m-d');
 
+        // Vérifie si une évaluation existe déjà
         $check = $pdo->prepare("SELECT id FROM evaluations WHERE stagiaire_id = ?");
         $check->execute([$stagiaire_id]);
 

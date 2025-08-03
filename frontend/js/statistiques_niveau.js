@@ -7,7 +7,16 @@ document.addEventListener("DOMContentLoaded", () => {
       // Afficher le nombre de stagiaires diplômés
       document.getElementById("nombreDiplomes").textContent = data.nombre_diplomes;
 
-      // Afficher le graphique de répartition par niveau d’études
+      // Fonction tooltip affichant nombre + pourcentage
+      const tooltipWithPercentage = (context) => {
+        const dataset = context.dataset;
+        const total = dataset.data.reduce((acc, val) => acc + val, 0);
+        const currentValue = dataset.data[context.dataIndex];
+        const percentage = ((currentValue / total) * 100).toFixed(1);
+        return `${context.label}: ${currentValue} (${percentage}%)`;
+      };
+
+      // Graphique niveau d'études avec tooltip pourcentage
       new Chart(document.getElementById("niveauChart"), {
         type: "doughnut",
         data: {
@@ -23,6 +32,15 @@ document.addEventListener("DOMContentLoaded", () => {
               "#e74a3b"
             ]
           }]
+        },
+        options: {
+          plugins: {
+            tooltip: {
+              callbacks: {
+                label: tooltipWithPercentage
+              }
+            }
+          }
         }
       });
     })
