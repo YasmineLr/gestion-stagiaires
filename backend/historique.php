@@ -6,6 +6,7 @@ try {
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     $action = $_GET['action'] ?? '';
+    $annee = $_GET['annee'] ?? '';
 
     if ($action === 'list') {
         $sql = "
@@ -30,10 +31,21 @@ try {
         LEFT JOIN tuteur_stagiaire ts ON ts.stagiaire_id = st.id AND ts.supprime = 0
         LEFT JOIN tuteurs t ON t.id = ts.tuteur_id
         WHERE LOWER(st.statut) = 'terminé' AND st.supprime = 0
-        ORDER BY st.id DESC
         ";
 
+        // Filtrer par année si précisé
+        if (!empty($annee) && preg_match('/^\d{4}$/', $annee)) {
+            $sql .= " AND YEAR(sg.date_debut) = :annee ";
+        }
+
+        $sql .= " ORDER BY st.id DESC ";
+
         $stmt = $pdo->prepare($sql);
+
+        if (!empty($annee) && preg_match('/^\d{4}$/', $annee)) {
+            $stmt->bindValue(':annee', $annee, PDO::PARAM_INT);
+        }
+
         $stmt->execute();
         $records = $stmt->fetchAll(PDO::FETCH_ASSOC);
 

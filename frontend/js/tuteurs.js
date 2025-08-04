@@ -94,15 +94,17 @@ tuteurForm.addEventListener('submit', async e => {
   e.preventDefault();
   formError.textContent = '';
 
+  // Déclenche la validation HTML5 native
+  if (!tuteurForm.checkValidity()) {
+    tuteurForm.classList.add('was-validated');
+    return;
+  }
+
+  // Récupération des valeurs
   const id = document.getElementById('tuteurId').value;
   const nom = document.getElementById('nom').value.trim();
   const prenom = document.getElementById('prenom').value.trim();
   const service_id = serviceSelect.value;
-
-  if (!prenom || !nom || !service_id) {
-    formError.textContent = 'Tous les champs sont obligatoires.';
-    return;
-  }
 
   const action = id ? 'update' : 'add';
   const payload = { id, nom, prenom, service_id };
@@ -117,6 +119,8 @@ tuteurForm.addEventListener('submit', async e => {
     if (data.success) {
       await loadTuteurs();
       formModal.style.display = 'none';
+      tuteurForm.reset();
+      tuteurForm.classList.remove('was-validated');
     } else {
       formError.textContent = data.message || 'Erreur serveur';
     }
@@ -124,6 +128,7 @@ tuteurForm.addEventListener('submit', async e => {
     formError.textContent = 'Erreur réseau: ' + error.message;
   }
 });
+
 
 async function deleteTuteur(id) {
   if (!confirm('Voulez-vous vraiment supprimer ce tuteur ?')) return;

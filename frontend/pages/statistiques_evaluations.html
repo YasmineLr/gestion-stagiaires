@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Statistiques d'Évaluations</title>
+
+  <!-- Bootstrap + Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Style personnalisé -->
+  <link rel="stylesheet" href="../styles/vueensemble.css" />
+
+  <style>
+    body {
+      background-color: #f8f9fc;
+    }
+
+    .card-stat {
+      background: white;
+      border-left: 0.25rem solid #4e73df;
+      box-shadow: 0 0.15rem 1.75rem 0 rgba(58,59,69,.15);
+      border-radius: 0.5rem;
+    }
+
+    .card-body {
+      padding-top: 1.5rem;
+      padding-bottom: 1.5rem;
+    }
+
+    .stat-title {
+      font-weight: 600;
+      color: #4e73df;
+      font-size: 1.1rem;
+    }
+
+    .stat-number {
+      font-size: 2.2rem;
+      font-weight: bold;
+      color: black;
+    }
+
+    h2 {
+      color: #4e73df;
+      font-weight: 700;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER PRINCIPAL -->
+  <div class="header-container">
+    <nav class="navbar navbar-expand-lg navbar-custom">
+      <div class="container">
+        <div class="collapse navbar-collapse justify-content-center">
+          <ul class="navbar-nav">
+            <li class="nav-item nav-item1 mx-1 active active1">
+              <a class="nav-link text-white d-flex align-items-center" href="statistiques.html">
+                <i class="bi bi-bar-chart-line-fill me-2 text-white"></i> Dashboard
+              </a>
+            </li>
+            <li class="nav-item nav-item1 mx-1">
+              <a class="nav-link text-white d-flex align-items-center" href="tuteurs.html">
+                <i class="bi bi-people-fill me-2"></i> Tuteurs
+              </a>
+            </li>
+            <li class="nav-item nav-item1 mx-1">
+              <a class="nav-link text-white d-flex align-items-center" href="stagiaires.html">
+                <i class="bi bi-person-lines-fill me-2"></i> Stagiaires
+              </a>
+            </li>
+            <li class="nav-item nav-item1 mx-1">
+              <a class="nav-link text-white d-flex align-items-center" href="historique.html">
+                <i class="bi bi-clock-history me-2"></i> Historiques
+              </a>
+            </li>
+            <li class="nav-item nav-item1 mx-1">
+              <a class="nav-link text-white d-flex align-items-center" href="pagedeconnexion.html">
+                <i class="bi bi-box-arrow-right me-2"></i> Déconnexion
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </div>
+
+  <!-- NAVBAR SECONDAIRE -->
+  <div class="navbar1">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom mt-2">
+      <div class="container">
+        <ul class="navbar-nav mx-auto">
+          <li class="nav-item nav-item2">
+            <a class="nav-link" href="statistiques.html">Statistiques Générales</a>
+          </li>
+          <li class="nav-item nav-item2">
+            <a class="nav-link" href="statistiques_stages.html">Stages</a>
+          </li>
+          <li class="nav-item nav-item2">
+            <a class="nav-link active" href="statistiques_evaluations.html">Évaluations</a>
+          </li>
+          <li class="nav-item nav-item2">
+            <a class="nav-link" href="statistiques_niveau.html">Niveau</a>
+          </li>
+          <li class="nav-item nav-item2">
+            <a class="nav-link" href="statistiques_duree.html">Durée de stage</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+
+  <!-- CONTENU PRINCIPAL -->
+  <div class="container py-5">
+    <h2>📋 Statistiques d'Évaluations</h2>
+
+    <div class="row g-4 justify-content-center">
+      <div class="col-md-6 col-lg-4">
+        <div class="card card-stat shadow-sm">
+          <div class="card-body py-3 text-center">
+            <div class="stat-title mb-2">Note moyenne des évaluations</div>
+            <div id="noteMoyenne" class="stat-number">--</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4">
+        <div class="card card-stat shadow-sm">
+          <div class="card-body py-3 text-center">
+            <div class="stat-title mb-2">Évaluations par tuteur</div>
+            <div id="evaluationsParTuteur" class="stat-number">--</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4">
+        <div class="card card-stat shadow-sm">
+          <div class="card-body py-3 text-center">
+            <div class="stat-title mb-2">Stagiaires non évalués</div>
+            <div id="stagiairesNonEvalues" class="stat-number">--</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Script JS -->
+  <script src="../js/statistiques_evaluations.js"></script>
+</body>
+</html>

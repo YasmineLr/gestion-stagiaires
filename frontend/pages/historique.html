@@ -93,42 +93,35 @@
       </nav>
     </div>
 
-    <div class="row mb-3" style="margin-top: 50px; margin-bottom: -50px">
-      <div class="col-md-3">
-        <input
-          type="text"
-          id="searchNom"
-          class="form-control"
-          placeholder="Rechercher stagiaire"
-        />
-      </div>
+    <div class="container mt-3 ol-md-4">
+      <div class="row g-2 align-items-center">
+        <div class="row mb-3" style="margin-top: 50px; margin-bottom: -50px">
+          <div class="col-md-3">
+            <input
+              type="text"
+              id="searchNom"
+              class="form-control"
+              placeholder="Rechercher stagiaire"
+            />
+          </div>
 
-      <div class="col-md-3">
-        <select id="filterService" class="form-select">
-          <option value="">Tous les services</option>
-        </select>
-      </div>
+          <div class="col-md-3">
+            <select id="filterService" class="form-select">
+              <option value="">Tous les services</option>
+            </select>
+          </div>
 
-      <div class="col-md-3">
-        <input
-          type="date"
-          id="dateDebutFilter"
-          class="form-control"
-          placeholder="Date début"
-        />
-      </div>
-
-      <div class="col-md-3">
-        <input
-          type="date"
-          id="dateFinFilter"
-          class="form-control"
-          placeholder="Date fin"
-        />
+          <div class="col-md-3">
+            <select id="filterAnnee" class="form-select">
+              <option value="">Toutes les années</option>
+              <!-- Les années seront ajoutées dynamiquement -->
+            </select>
+          </div>
+        </div>
       </div>
     </div>
 
-    <div class="container my-5" style="margin-top: -30px">
+    <div class="container my-5" style="margin-top: -30px; margin-left: 40px">
       <div class="table-responsive mt-4">
         <table class="table table-bordered" id="historiqueTable">
           <thead class="table-light">
