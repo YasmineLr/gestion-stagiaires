@@ -1,51 +1,72 @@
 <?php
-// Pour test local sans session
 header('Content-Type: application/json');
+session_start();
 
-// 🔧 Remplace cette valeur par un ID tuteur existant dans ta table `stages`
-$tuteur_id = 5;
+$tuteur_id = $_SESSION['tuteur_id'] ?? 1;
 
 try {
     $pdo = new PDO('mysql:host=localhost;port=3307;dbname=gestion-stagiaires;charset=utf8', 'root', '');
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // 🔹 Stages en cours
-    $stmtEnCours = $pdo->prepare("SELECT COUNT(*) FROM stages WHERE tuteur_id = ? AND statut = 'En cours'");
-    $stmtEnCours->execute([$tuteur_id]);
-    $en_cours = $stmtEnCours->fetchColumn();
+    // Récupérer tous les stagiaires de ce tuteur
+    $stmt = $pdo->prepare("SELECT stagiaire_id FROM tuteur_stagiaire WHERE tuteur_id = ? AND supprime = 0");
+    $stmt->execute([$tuteur_id]);
+    $stagiaire_ids = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
-    // 🔹 Stages terminés
-    $stmtTermines = $pdo->prepare("SELECT COUNT(*) FROM stages WHERE tuteur_id = ? AND statut = 'Terminé'");
-    $stmtTermines->execute([$tuteur_id]);
-    $termines = $stmtTermines->fetchColumn();
+    if (empty($stagiaire_ids)) {
+        echo json_encode([
+            'success' => true,
+            'en_cours' => 0,
+            'termines' => 0,
+            'retard' => 0,
+            'domaines' => []
+        ]);
+        exit;
+    }
 
-    // 🔹 Stages en retard = en cours mais date_fin dépassée
-    $stmtRetard = $pdo->prepare("SELECT COUNT(*) FROM stages WHERE tuteur_id = ? AND statut = 'En cours' AND date_fin < CURDATE()");
-    $stmtRetard->execute([$tuteur_id]);
-    $retard = $stmtRetard->fetchColumn();
+    $placeholders = implode(',', array_fill(0, count($stagiaire_ids), '?'));
 
-    // 🔹 Répartition par domaine (nom_stage)
-    $stmtDomaines = $pdo->prepare("
-        SELECT nom_stage AS domaine, COUNT(*) AS total
-        FROM stages
-        WHERE tuteur_id = ? AND statut = 'En cours'
-        GROUP BY nom_stage
-    ");
-    $stmtDomaines->execute([$tuteur_id]);
-    $domaines = $stmtDomaines->fetchAll(PDO::FETCH_ASSOC);
+    // Récupérer TOUS les stages de ces stagiaires (pas juste les plus récents)
+    $stmt = $pdo->prepare("SELECT * FROM stages WHERE stagiaire_id IN ($placeholders)");
+    $stmt->execute($stagiaire_ids);
+    $stages = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // ✅ Résultat
+    $en_cours = $termines = $retard = 0;
+    $domaines = [];
+
+    foreach ($stages as $stage) {
+        if ($stage['statut'] === 'En cours') {
+            $en_cours++;
+            if (strtotime($stage['date_fin']) < strtotime(date('Y-m-d'))) {
+                $retard++;
+            }
+        } elseif ($stage['statut'] === 'Terminé') {
+            $termines++;
+        }
+
+        $domaine = $stage['sujet'];
+        if (!isset($domaines[$domaine])) {
+            $domaines[$domaine] = 0;
+        }
+        $domaines[$domaine]++;
+    }
+
+    $domaines_array = [];
+    foreach ($domaines as $domaine => $total) {
+        $domaines_array[] = ['domaine' => $domaine, 'total' => $total];
+    }
+
     echo json_encode([
         'success' => true,
-        'en_cours' => (int) $en_cours,
-        'termines' => (int) $termines,
-        'retard' => (int) $retard,
-        'domaines' => $domaines
+        'en_cours' => $en_cours,
+        'termines' => $termines,
+        'retard' => $retard,
+        'domaines' => $domaines_array
     ]);
 
 } catch (PDOException $e) {
     echo json_encode([
         'success' => false,
-        'message' => 'Erreur de connexion : ' . $e->getMessage()
+        'message' => 'Erreur BDD : ' . $e->getMessage()
     ]);
 }

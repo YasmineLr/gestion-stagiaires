@@ -3,7 +3,7 @@ session_start();
 header('Content-Type: application/json');
 
 if (!isset($_SESSION['tuteur_id'])) {
-  echo json_encode(['success' => false, 'message' => 'Non connecté']);
+  echo json_encode(['labels' => [], 'values' => [], 'message' => 'Non connecté']);
   exit;
 }
 
@@ -13,7 +13,7 @@ try {
   $pdo = new PDO('mysql:host=localhost;port=3307;dbname=gestion-stagiaires;charset=utf8', 'root', '');
   $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-  // total
+  // Récupération des données
   $stmtTotal = $pdo->prepare("
     SELECT COUNT(*) 
     FROM tuteur_stagiaire ts
@@ -23,7 +23,6 @@ try {
   $stmtTotal->execute([$tuteur_id]);
   $total = $stmtTotal->fetchColumn();
 
-  // actifs
   $stmtActifs = $pdo->prepare("
     SELECT COUNT(*) 
     FROM tuteur_stagiaire ts
@@ -33,7 +32,6 @@ try {
   $stmtActifs->execute([$tuteur_id]);
   $actifs = $stmtActifs->fetchColumn();
 
-  // terminés
   $stmtTermines = $pdo->prepare("
     SELECT COUNT(*) 
     FROM tuteur_stagiaire ts
@@ -43,13 +41,12 @@ try {
   $stmtTermines->execute([$tuteur_id]);
   $termines = $stmtTermines->fetchColumn();
 
+  // Préparer structure compatible avec Chart.js
   echo json_encode([
-    'success' => true,
-    'total' => $total,
-    'actifs' => $actifs,
-    'termines' => $termines
+    'labels' => ['Actifs', 'Terminés'],
+    'values' => [$actifs, $termines]
   ]);
 
 } catch (PDOException $e) {
-  echo json_encode(['success' => false, 'message' => 'Erreur BDD : ' . $e->getMessage()]);
+  echo json_encode(['labels' => [], 'values' => [], 'message' => 'Erreur BDD : ' . $e->getMessage()]);
 }

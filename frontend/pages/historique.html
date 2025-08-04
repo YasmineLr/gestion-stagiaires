@@ -1,98 +1,158 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Historique des Stagiaires - Dashboard Admin</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Historique des Stagiaires - Dashboard Admin</title>
 
-  <!-- Bootstrap & Icons -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+    <!-- Bootstrap & Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
 
-  <!-- Styles personnalisés -->
-  <link rel="stylesheet" href="../styles/vueensemble.css" />
-  <link rel="stylesheet" href="../styles/tuteurs.css" />
-</head>
-<body>
-  <!-- NAVBAR PRINCIPALE -->
-  <div class="header-container">
-    <nav class="navbar navbar-expand-lg navbar-custom">
-      <div class="container">
-        <div class="collapse navbar-collapse justify-content-center">
-          <ul class="navbar-nav">
-            <li class="nav-item nav-item1 mx-1 ">
-              <a class="nav-link text-white d-flex align-items-center" href="dashboard.html">
-                <i class="bi bi-bar-chart-line-fill me-2 text-white"></i> Dashboard
-              </a>
-            </li>
-            <li class="nav-item nav-item1 mx-1 ">
-              <a class="nav-link text-white d-flex align-items-center" href="tuteurs.html">
-                <i class="bi bi-people-fill me-2"></i> Tuteurs
-              </a>
-            </li>
-            <li class="nav-item nav-item1 mx-1 ">
-              <a class="nav-link text-white d-flex align-items-center" href="stagiaires.html">
-                <i class="bi bi-person-lines-fill me-2"></i> Stagiaires
-              </a>
-            </li>
-            <li class="nav-item nav-item1 mx-1 active active1">
-              <a class="nav-link text-white d-flex align-items-center" href="historique.html">
-                <i class="bi bi-clock-history me-2"></i> Historique
-              </a>
-            </li>
-            <li class="nav-item nav-item1 mx-1">
-              <a class="nav-link text-white d-flex align-items-center" href="login.html">
-                <i class="bi bi-box-arrow-right me-2"></i> Déconnexion
-              </a>
+    <!-- Styles personnalisés -->
+    <link rel="stylesheet" href="../styles/vueensemble.css" />
+    <link rel="stylesheet" href="../styles/tuteurs.css" />
+  </head>
+  <body>
+    <!-- NAVBAR PRINCIPALE -->
+    <div class="header-container">
+      <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container">
+          <div class="collapse navbar-collapse justify-content-center">
+            <ul class="navbar-nav">
+              <li class="nav-item nav-item1 mx-1">
+                <a
+                  class="nav-link text-white d-flex align-items-center"
+                  href="statistiques.html"
+                >
+                  <i class="bi bi-bar-chart-line-fill me-2 text-white"></i>
+                  Dashboard
+                </a>
+              </li>
+              <li class="nav-item nav-item1 mx-1">
+                <a
+                  class="nav-link text-white d-flex align-items-center"
+                  href="tuteurs.html"
+                >
+                  <i class="bi bi-people-fill me-2"></i> Tuteurs
+                </a>
+              </li>
+              <li class="nav-item nav-item1 mx-1">
+                <a
+                  class="nav-link text-white d-flex align-items-center"
+                  href="stagiaires.html"
+                >
+                  <i class="bi bi-person-lines-fill me-2"></i> Stagiaires
+                </a>
+              </li>
+              <li class="nav-item nav-item1 mx-1 active active1">
+                <a
+                  class="nav-link text-white d-flex align-items-center"
+                  href="historique.html"
+                >
+                  <i class="bi bi-clock-history me-2"></i> Historique
+                </a>
+              </li>
+              <li class="nav-item nav-item1 mx-1">
+                <a
+                  class="nav-link text-white d-flex align-items-center"
+                  href="pagedeconnexion.html"
+                >
+                  <i class="bi bi-box-arrow-right me-2"></i> Déconnexion
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </div>
+
+    <!-- NAVBAR SECONDAIRE -->
+    <div class="navbar1">
+      <nav
+        class="navbar navbar-expand-lg navbar-light bg-light border-bottom mt-2"
+      >
+        <div class="container">
+          <ul class="navbar-nav mx-auto">
+            <li class="nav-item nav-item2">
+              <a
+                class="nav-link active"
+                href="historique.html"
+                aria-current="page"
+                >Historique des stages</a
+              >
             </li>
           </ul>
         </div>
-      </div>
-    </nav>
-  </div>
-
-  <!-- NAVBAR SECONDAIRE -->
-  <div class="navbar1">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom mt-2">
-      <div class="container">
-        <ul class="navbar-nav mx-auto">
-          <li class="nav-item nav-item2">
-            <a class="nav-link active" href="historique.html" aria-current="page">Historique des stages</a>
-          </li>
-        </ul>
-      </div>
-    </nav>
-  </div>
-
-  <div class="container my-5">
- 
-
-    <div class="table-responsive mt-4">
-      <table class="table table-bordered" id="historiqueTable">
-      <thead class="table-light">
-  <tr>
-    <th>Nom du stagiaire</th>
-    <th>Nom du tuteur</th>
-    <th>Date affectation</th>
-    <th>Date début</th>
-    <th>Date fin</th>
-    <th>Service</th>
-    <th>Type de stage</th>
-    <th>Nom du stage</th>
-    <th>Note</th>
-    <th>Commentaires</th>
-    <th>Documents</th>
-  </tr>
-</thead>
-
-        <tbody>
-          <!-- données chargées dynamiquement -->
-        </tbody>
-      </table>
+      </nav>
     </div>
-  </div>
 
-  <script src="../js/historique.js"></script>
-</body>
+    <div class="row mb-3" style="margin-top: 50px; margin-bottom: -50px">
+      <div class="col-md-3">
+        <input
+          type="text"
+          id="searchNom"
+          class="form-control"
+          placeholder="Rechercher stagiaire"
+        />
+      </div>
+
+      <div class="col-md-3">
+        <select id="filterService" class="form-select">
+          <option value="">Tous les services</option>
+        </select>
+      </div>
+
+      <div class="col-md-3">
+        <input
+          type="date"
+          id="dateDebutFilter"
+          class="form-control"
+          placeholder="Date début"
+        />
+      </div>
+
+      <div class="col-md-3">
+        <input
+          type="date"
+          id="dateFinFilter"
+          class="form-control"
+          placeholder="Date fin"
+        />
+      </div>
+    </div>
+
+    <div class="container my-5" style="margin-top: -30px">
+      <div class="table-responsive mt-4">
+        <table class="table table-bordered" id="historiqueTable">
+          <thead class="table-light">
+            <tr>
+              <th>Nom du stagiaire</th>
+              <th>Nom du tuteur</th>
+              <th>Date début</th>
+              <th>Date fin</th>
+              <th>Service</th>
+              <th>Type de stage</th>
+              <th>Nom du stage</th>
+              <th>Note</th>
+              <th>Commentaires</th>
+              <th>Documents</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <!-- données chargées dynamiquement -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <script src="../js/historique.js"></script>
+  </body>
 </html>
-

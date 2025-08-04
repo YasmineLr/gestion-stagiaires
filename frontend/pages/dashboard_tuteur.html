@@ -4,8 +4,6 @@
     <meta charset="UTF-8" />
     <title>Dashboard Tuteur</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <!-- Bootstrap & Icons -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -14,20 +12,17 @@
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
       rel="stylesheet"
     />
-
-    <!-- Custom CSS -->
     <link rel="stylesheet" href="../styles/dashboard_tuteur.css" />
     <link rel="stylesheet" href="../styles/tuteur-header.css" />
   </head>
-
   <body>
-    <!-- HEADER NAVBAR -->
+    <!-- HEADER -->
     <div class="header-container">
       <nav class="navbar navbar-expand-lg navbar-custom">
         <div class="container">
           <div class="collapse navbar-collapse justify-content-center">
             <ul class="navbar-nav">
-              <li class="nav-item nav-item1 mx-1 active active1">
+              <li class="nav-item mx-1 active">
                 <a
                   class="nav-link text-white d-flex align-items-center"
                   href="#"
@@ -35,16 +30,15 @@
                   <i class="bi bi-speedometer2 me-2"></i> Dashboard Tuteur
                 </a>
               </li>
-              <li class="nav-item nav-item1 mx-1">
+              <li class="nav-item mx-1">
                 <a
                   class="nav-link text-white d-flex align-items-center"
                   href="../../backend/tuteur.php"
                 >
-                  <i class="bi bi-bar-chart-line-fill me-2 text-white"></i> Mes
-                  stagiaires
+                  <i class="bi bi-bar-chart-line-fill me-2"></i> Mes stagiaires
                 </a>
               </li>
-              <li class="nav-item nav-item1 mx-1">
+              <li class="nav-item mx-1">
                 <a
                   class="nav-link text-white d-flex align-items-center"
                   href="evaluation.html"
@@ -52,7 +46,7 @@
                   <i class="bi bi-pencil-fill me-2"></i> Évaluer Stagiaire
                 </a>
               </li>
-              <li class="nav-item nav-item1 mx-1">
+              <li class="nav-item mx-1">
                 <a
                   class="nav-link text-white d-flex align-items-center"
                   href="historique_tuteur.html"
@@ -60,7 +54,7 @@
                   <i class="bi bi-clock-history me-2"></i> Historique
                 </a>
               </li>
-              <li class="nav-item nav-item1 mx-1">
+              <li class="nav-item mx-1">
                 <a
                   class="nav-link text-white d-flex align-items-center"
                   href="login.html"
@@ -74,14 +68,14 @@
       </nav>
     </div>
 
-    <!-- PAGE AVEC SIDEBAR -->
+    <!-- PAGE -->
     <div class="d-flex">
       <!-- SIDEBAR -->
       <div class="sidebar bg-dark text-white p-3">
         <h5 class="text-center mb-4">Menu</h5>
         <div class="sidebar-item dropdown-hover">
           <button class="btn btn-outline-light w-100">
-            statistiques general des stagiaires
+            Statistiques générales
           </button>
           <div class="submenu">
             <a href="dashboard_tuteur.html?view=statut">Par statut</a>
@@ -94,25 +88,31 @@
         <div class="sidebar-item mt-2">
           <a href="dashboard_tuteur.html?view=stages">
             <button class="btn btn-outline-light w-100">
-              statistiques de stages
+              📘 Statistiques de stages
             </button>
           </a>
         </div>
-        <div class="sidebar-item">
-          <button class="btn btn-outline-light w-100 mt-2">3</button>
+        <div class="sidebar-item mt-2">
+          <a href="dashboard_tuteur.html?view=avancees">
+            <button class="btn btn-outline-light w-100">
+              📊 Statistiques avancées
+            </button>
+          </a>
         </div>
-        <div class="sidebar-item">
-          <button class="btn btn-outline-light w-100 mt-2">4</button>
-        </div>
-        <div class="sidebar-item">
-          <button class="btn btn-outline-light w-100 mt-2">5</button>
+        <div class="sidebar-item mt-2">
+          <a href="dashboard_tuteur.html?view=niveau">
+            <button class="btn btn-outline-light w-100">
+              🎓 Statistiques par niveau d'études
+            </button>
+          </a>
         </div>
       </div>
 
-      <!-- CONTENU PRINCIPAL -->
+      <!-- CONTENU -->
       <div class="content container mt-5" id="dashboard-content"></div>
     </div>
 
+    <!-- JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
@@ -122,198 +122,51 @@
         const container = document.getElementById("dashboard-content");
 
         switch (view) {
-          case "statut":
-            container.innerHTML = `
-              <h2 class="text-center mb-4">Répartition par Statut</h2>
-              <div class="row text-center">
-                <div class="col-md-4">
-                  <div class="card shadow p-3">
-                    <h5>Total stagiaires</h5>
-                    <p id="total-stagiaires" class="fw-bold fs-4 text-primary">...</p>
-                  </div>
-                </div>
-                <div class="col-md-4">
-                  <div class="card shadow p-3">
-                    <h5>Stagiaires en cours</h5>
-                    <p id="stagiaires-actifs" class="fw-bold fs-4 text-warning">...</p>
-                  </div>
-                </div>
-                <div class="col-md-4">
-                  <div class="card shadow p-3">
-                    <h5>Stagiaires terminés</h5>
-                    <p id="stagiaires-termines" class="fw-bold fs-4 text-success">...</p>
-                  </div>
-                </div>
-              </div>`;
-            loadStatutData();
-            break;
-
-          case "service":
-            container.innerHTML = `
-              <h2 class="text-center mb-4">Répartition par Service</h2>
-              <canvas id="chartService" height="100"></canvas>`;
-            loadChartService();
-            break;
-
-          case "nom_stage":
-            container.innerHTML = `
-              <h2 class="text-center mb-4">Répartition par Nom du Stage</h2>
-              <canvas id="chartNomStage" height="100"></canvas>`;
-            loadChartNomStage();
-            break;
-
-          case "age":
-            container.innerHTML = `
-              <h2 class="text-center mb-4">Répartition par Âge</h2>
-              <canvas id="chartAge" height="100"></canvas>`;
-            loadChartAge();
-            break;
-
-          case "sexe":
-            container.innerHTML = `
-              <h2 class="text-center mb-4">Répartition par Sexe</h2>
-              <canvas id="chartSexe" height="100"></canvas>`;
-            loadChartSexe();
-            break;
-
           case "stages":
             container.innerHTML = `
               <h2 class="text-center mb-4">Statistiques des Stages</h2>
               <div class="row text-center mb-4">
-                <div class="col-md-3">
-                  <div class="card shadow p-3">
-                    <h6>Stages en cours</h6>
-                    <p id="en-cours" class="fw-bold fs-4 text-primary">...</p>
-                  </div>
-                </div>
-                <div class="col-md-3">
-                  <div class="card shadow p-3">
-                    <h6>Stages terminés</h6>
-                    <p id="termines" class="fw-bold fs-4 text-success">...</p>
-                  </div>
-                </div>
-                <div class="col-md-3">
-                  <div class="card shadow p-3">
-                    <h6>Stages en retard</h6>
-                    <p id="retard" class="fw-bold fs-4 text-danger">...</p>
-                  </div>
-                </div>
+                <div class="col-md-4"><div class="card shadow p-3"><h6>Stages en cours</h6><p id="en-cours" class="fw-bold fs-4 text-primary">...</p></div></div>
+                <div class="col-md-4"><div class="card shadow p-3"><h6>Stages terminés</h6><p id="termines" class="fw-bold fs-4 text-success">...</p></div></div>
+                <div class="col-md-4"><div class="card shadow p-3"><h6>Stages en retard</h6><p id="retard" class="fw-bold fs-4 text-danger">...</p></div></div>
               </div>
-              <h4 class="text-center mb-3">Répartition par Domaine</h4>
+              <h4 class="text-center mb-3">Répartition par Sujet de Stage</h4>
               <canvas id="chartDomaine" height="100"></canvas>`;
             loadStatsStages();
             break;
 
+          case "avancees":
+            container.innerHTML = `
+              <h2 class="text-center mb-4">Statistiques Avancées</h2>
+              <div class="row text-center mb-4">
+                <div class="col-md-3"><div class="card shadow p-3"><h6>📅 Stages à venir</h6><p id="a-venir" class="fw-bold fs-4 text-info">...</p></div></div>
+                <div class="col-md-3"><div class="card shadow p-3"><h6>⏳ Durée moyenne</h6><p id="duree-moyenne" class="fw-bold fs-4 text-warning">...</p></div></div>
+                <div class="col-md-3"><div class="card shadow p-3"><h6>✔️ Évalués</h6><p id="evalues" class="fw-bold fs-4 text-success">...</p></div></div>
+                <div class="col-md-3"><div class="card shadow p-3"><h6>❌ Non évalués</h6><p id="non-evalues" class="fw-bold fs-4 text-danger">...</p></div></div>
+              </div>
+              <div class="text-center mt-4">
+                <h6>⚠️ Stages incomplets</h6><p id="incomplets" class="fw-bold fs-5 text-danger">...</p>
+              </div>`;
+            loadStatsAvancees();
+            break;
+
           default:
-            container.innerHTML = `<p class="text-center">🔍 Vue non reconnue.</p>`;
+            container.innerHTML = `
+              <h4 class="text-center my-4">📊 Statistiques par ${
+                view === "niveau" ? "niveau d'études" : view
+              }</h4>
+              <canvas id="chart" height="100"></canvas>`;
+            loadGenericStats(view);
+            break;
         }
       });
-
-      function loadStatutData() {
-        fetch("../../backend/stats_par_statut.php")
-          .then((res) => res.json())
-          .then((data) => {
-            document.getElementById("total-stagiaires").textContent =
-              data.total;
-            document.getElementById("stagiaires-actifs").textContent =
-              data.actifs;
-            document.getElementById("stagiaires-termines").textContent =
-              data.termines;
-          });
-      }
-
-      function loadChartService() {
-        fetch("../../backend/stats_par_service.php")
-          .then((res) => res.json())
-          .then((data) => {
-            new Chart(document.getElementById("chartService"), {
-              type: "bar",
-              data: {
-                labels: data.labels,
-                datasets: [
-                  {
-                    label: "Nombre de stagiaires",
-                    data: data.values,
-                    backgroundColor: "rgba(54, 162, 235, 0.6)",
-                  },
-                ],
-              },
-              options: {
-                responsive: true,
-                scales: { y: { beginAtZero: true } },
-              },
-            });
-          });
-      }
-
-      function loadChartNomStage() {
-        fetch("../../backend/stats_par_nom_stage.php")
-          .then((res) => res.json())
-          .then((data) => {
-            new Chart(document.getElementById("chartNomStage"), {
-              type: "pie",
-              data: {
-                labels: data.labels,
-                datasets: [
-                  {
-                    label: "Stages",
-                    data: data.values,
-                    backgroundColor: ["#ff6384", "#36a2eb", "#cc65fe"],
-                  },
-                ],
-              },
-            });
-          });
-      }
-
-      function loadChartAge() {
-        fetch("../../backend/stats_par_age.php")
-          .then((res) => res.json())
-          .then((data) => {
-            new Chart(document.getElementById("chartAge"), {
-              type: "bar",
-              data: {
-                labels: data.labels,
-                datasets: [
-                  {
-                    label: "Stagiaires",
-                    data: data.values,
-                    backgroundColor: "#ffc107",
-                  },
-                ],
-              },
-              options: {
-                responsive: true,
-                scales: { y: { beginAtZero: true } },
-              },
-            });
-          });
-      }
-
-      function loadChartSexe() {
-        fetch("../../backend/stats_par_sexe.php")
-          .then((res) => res.json())
-          .then((data) => {
-            new Chart(document.getElementById("chartSexe"), {
-              type: "doughnut",
-              data: {
-                labels: data.labels,
-                datasets: [
-                  {
-                    label: "Sexe",
-                    data: data.values,
-                    backgroundColor: ["#007bff", "#e83e8c"],
-                  },
-                ],
-              },
-            });
-          });
-      }
 
       function loadStatsStages() {
         fetch("../../backend/stats_stages.php")
           .then((res) => res.json())
           .then((data) => {
+            if (!data.success)
+              return alert("Erreur chargement statistiques stages");
             document.getElementById("en-cours").textContent = data.en_cours;
             document.getElementById("termines").textContent = data.termines;
             document.getElementById("retard").textContent = data.retard;
@@ -324,7 +177,6 @@
                 labels: data.domaines.map((d) => d.domaine),
                 datasets: [
                   {
-                    label: "Stages",
                     data: data.domaines.map((d) => d.total),
                     backgroundColor: [
                       "#28a745",
@@ -336,6 +188,64 @@
                 ],
               },
             });
+          });
+      }
+
+      function loadStatsAvancees() {
+        fetch("../../backend/stats_avancees.php")
+          .then((res) => res.json())
+          .then((data) => {
+            if (!data.success) return alert("Erreur chargement stats avancées");
+            document.getElementById("a-venir").textContent = data.a_venir;
+            document.getElementById("duree-moyenne").textContent =
+              data.duree_moyenne + " jours";
+            document.getElementById("evalues").textContent = data.evalues;
+            document.getElementById("non-evalues").textContent =
+              data.non_evalues;
+            document.getElementById("incomplets").textContent = data.incomplets;
+          });
+      }
+
+      function loadGenericStats(view) {
+        fetch(`../../backend/stats_par_niveau.php`)
+          .then((res) => res.json())
+          .then((data) => {
+            if (!data || !data.labels || !data.values) {
+              document.getElementById("chart").remove();
+              document.getElementById("dashboard-content").innerHTML +=
+                '<p class="text-danger text-center">❌ Erreur de chargement</p>';
+              return;
+            }
+            new Chart(document.getElementById("chart"), {
+              type: "bar",
+              data: {
+                labels: data.labels,
+                datasets: [
+                  {
+                    label: "Nombre",
+                    data: data.values,
+                    backgroundColor: "#0d6efd",
+                  },
+                ],
+              },
+              options: {
+                responsive: true,
+                plugins: {
+                  legend: { display: false },
+                  title: {
+                    display: true,
+                    text: `Statistiques par ${
+                      view === "niveau" ? "niveau d'études" : view
+                    }`,
+                  },
+                },
+              },
+            });
+          })
+          .catch((err) => {
+            console.error(err);
+            document.getElementById("dashboard-content").innerHTML +=
+              '<p class="text-danger text-center">❌ Une erreur est survenue</p>';
           });
       }
     </script>

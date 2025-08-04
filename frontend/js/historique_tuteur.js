@@ -3,19 +3,22 @@ document.addEventListener("DOMContentLoaded", () => {
     .then((res) => res.json())
     .then((data) => {
       const tbody = document.getElementById("historiqueBody");
+      tbody.innerHTML = "";
 
       if (data.success && data.data.length > 0) {
         data.data.forEach((stagiaire) => {
           const row = document.createElement("tr");
           row.innerHTML = `
             <td>${stagiaire.prenom} ${stagiaire.nom}</td>
-            <td>${stagiaire.date_affectation}</td>
+            <td>${stagiaire.prenom_tuteur ?? "-"} ${
+            stagiaire.nom_tuteur ?? "-"
+          }</td>
+            <td>${stagiaire.date_affectation ?? "-"}</td>
             <td>${stagiaire.date_debut}</td>
             <td>${stagiaire.date_fin}</td>
-            <td>${stagiaire.service}</td>
-            <td>${stagiaire.sujet}</td>
-            <td>${stagiaire.nom_stage}</td>
+            <td>${stagiaire.service ?? "-"}</td>
             <td>${stagiaire.type_stage}</td>
+            <td>${stagiaire.nom_stage}</td>
             <td>${stagiaire.note ?? "-"}</td>
             <td>${stagiaire.commentaire ?? "-"}</td>
             <td>${

@@ -21,7 +21,6 @@ try {
             sg.document_stage,
             ev.note,
             ev.commentaires,
-            ts.date_affectation,
             t.nom AS nom_tuteur,
             t.prenom AS prenom_tuteur
         FROM stagiaires st
@@ -50,5 +49,5 @@ try {
 
 } catch (PDOException $e) {
     echo json_encode(['success' => false, 'message' => 'Erreur DB : ' . $e->getMessage()]);
-    exit;
+    exit;
 }
